@@ -35,7 +35,7 @@ class ConsentLogger {
 		$ua           = $_SERVER['HTTP_USER_AGENT'] ?? '';
 		$visitor_hash = hash( 'sha256', $ip . $ua );
 
-		$ip_country = sanitize_text_field(
+		$ip_country = \sanitize_text_field(
 			$_SERVER['HTTP_X_COUNTRY'] ??
 			$_SERVER['HTTP_CF_IPCOUNTRY'] ??
 			''
@@ -53,19 +53,19 @@ class ConsentLogger {
 		$consent_type  = in_array( $consent_type, $allowed_types, true ) ? $consent_type : 'api';
 
 		$row = [
-			'consent_id'           => sanitize_text_field( $consent_id ),
+			'consent_id'           => \sanitize_text_field( $consent_id ),
 			'consent_type'         => $consent_type,
-			'categories_accepted'  => wp_json_encode( array_map( 'sanitize_text_field', $categories_accepted ) ),
-			'categories_rejected'  => wp_json_encode( array_map( 'sanitize_text_field', $categories_rejected ) ),
+			'categories_accepted'  => \wp_json_encode( array_map( 'sanitize_text_field', $categories_accepted ) ),
+			'categories_rejected'  => \wp_json_encode( array_map( 'sanitize_text_field', $categories_rejected ) ),
 			'gpc'                  => (int) $gpc,
 			'visitor_hash'         => $visitor_hash,
 			'ip_country'           => $ip_country,
-			'user_agent'           => sanitize_text_field( substr( $ua, 0, 512 ) ),
-			'wordpress_user_id'    => isset( $extra['wordpress_user_id'] ) ? absint( $extra['wordpress_user_id'] ) : get_current_user_id(),
-			'banner_version'       => sanitize_text_field( $extra['banner_version'] ?? '' ),
-			'consent_mode_signals' => isset( $extra['consent_mode_signals'] ) ? wp_json_encode( $extra['consent_mode_signals'] ) : null,
-			'receipt_hash'         => sanitize_text_field( $extra['receipt_hash'] ?? '' ),
-			'created_at'           => current_time( 'mysql', true ),
+			'user_agent'           => \sanitize_text_field( substr( $ua, 0, 512 ) ),
+			'wordpress_user_id'    => isset( $extra['wordpress_user_id'] ) ? \absint( $extra['wordpress_user_id'] ) : \get_current_user_id(),
+			'banner_version'       => \sanitize_text_field( $extra['banner_version'] ?? '' ),
+			'consent_mode_signals' => isset( $extra['consent_mode_signals'] ) ? \wp_json_encode( $extra['consent_mode_signals'] ) : null,
+			'receipt_hash'         => \sanitize_text_field( $extra['receipt_hash'] ?? '' ),
+			'created_at'           => \current_time( 'mysql', true ),
 		];
 
 		$formats = [ '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s' ];
@@ -82,13 +82,13 @@ class ConsentLogger {
 	public function get_logs( array $args = [] ): array {
 		global $wpdb;
 
-		$per_page     = max( 1, absint( $args['per_page'] ?? 20 ) );
-		$page         = max( 1, absint( $args['page'] ?? 1 ) );
+		$per_page     = max( 1, \absint( $args['per_page'] ?? 20 ) );
+		$page         = max( 1, \absint( $args['page'] ?? 1 ) );
 		$offset       = ( $page - 1 ) * $per_page;
-		$visitor_hash = sanitize_text_field( $args['visitor_hash'] ?? '' );
-		$consent_type = sanitize_text_field( $args['consent_type'] ?? '' );
-		$date_from    = sanitize_text_field( $args['date_from'] ?? '' );
-		$date_to      = sanitize_text_field( $args['date_to'] ?? '' );
+		$visitor_hash = \sanitize_text_field( $args['visitor_hash'] ?? '' );
+		$consent_type = \sanitize_text_field( $args['consent_type'] ?? '' );
+		$date_from    = \sanitize_text_field( $args['date_from'] ?? '' );
+		$date_to      = \sanitize_text_field( $args['date_to'] ?? '' );
 
 		$where  = [];
 		$params = [];
@@ -171,7 +171,7 @@ class ConsentLogger {
 	public function get_trend( int $days = 30 ): array {
 		global $wpdb;
 
-		$date_limit = gmdate( 'Y-m-d H:i:s', strtotime( "-{$days} days" ) );
+		$date_limit = \gmdate( 'Y-m-d H:i:s', strtotime( "-{$days} days" ) );
 
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
@@ -196,7 +196,7 @@ class ConsentLogger {
 	public function cleanup_old( int $days = 1095 ): int {
 		global $wpdb;
 
-		$date_limit = gmdate( 'Y-m-d H:i:s', strtotime( "-{$days} days" ) );
+		$date_limit = \gmdate( 'Y-m-d H:i:s', strtotime( "-{$days} days" ) );
 
 		$result = $wpdb->query(
 			$wpdb->prepare(

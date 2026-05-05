@@ -20,7 +20,7 @@ class LicenseManager {
                 return strtolower( $plan );
             }
         }
-        return strtolower( get_option( 'cf_license_plan', 'free' ) );
+        return strtolower( \get_option( 'cf_license_plan', 'free' ) );
     }
 
     public function is_pro(): bool {
@@ -36,12 +36,12 @@ class LicenseManager {
     }
 
     public function validate_license( string $key ): bool|\WP_Error {
-        $key = sanitize_text_field( $key );
+        $key = \sanitize_text_field( $key );
         if ( empty( $key ) ) {
-            return new \WP_Error( 'empty_key', __( 'License key cannot be empty.', 'consentforge' ) );
+            return new \WP_Error( 'empty_key', \__( 'License key cannot be empty.', 'consentforge' ) );
         }
         // Stub: real validation would call the licensing API
-        update_option( 'cf_license_key', $key );
+        \update_option( 'cf_license_key', $key );
         return true;
     }
 
@@ -51,7 +51,7 @@ class LicenseManager {
             'is_pro'     => $this->is_pro(),
             'is_business'=> $this->is_business(),
             'is_agency'  => $this->is_agency(),
-            'key'        => get_option( 'cf_license_key', '' ) ? '***-' . substr( get_option( 'cf_license_key', '' ), -4 ) : '',
+            'key'        => \get_option( 'cf_license_key', '' ) ? '***-' . substr( \get_option( 'cf_license_key', '' ), -4 ) : '',
         ];
     }
 }

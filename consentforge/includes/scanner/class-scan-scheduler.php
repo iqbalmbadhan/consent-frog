@@ -14,7 +14,7 @@ class ScanScheduler {
     }
 
     private function __construct() {
-        add_action( self::CRON_HOOK, [ $this, 'run_scheduled_scan' ] );
+        \add_action( self::CRON_HOOK, [ $this, 'run_scheduled_scan' ] );
     }
 
     public function schedule_scan(): void {
@@ -36,19 +36,19 @@ class ScanScheduler {
 
         $results = $scanner->get_scan_results( $scan_id );
         if ( $results && (int) $results['uncategorized_count'] > 0 ) {
-            $admin_email = get_option( 'admin_email' );
-            $site_name   = get_bloginfo( 'name' );
+            $admin_email = \get_option( 'admin_email' );
+            $site_name   = \get_bloginfo( 'name' );
             $count       = (int) $results['uncategorized_count'];
 
-            wp_mail(
+            \wp_mail(
                 $admin_email,
                 /* translators: %s: site name */
-                sprintf( __( '[%s] ConsentForge: New unclassified cookies detected', 'consentforge' ), $site_name ),
+                sprintf( \__( '[%s] ConsentForge: New unclassified cookies detected', 'consentforge' ), $site_name ),
                 sprintf(
                     /* translators: 1: cookie count 2: admin URL */
-                    __( "ConsentForge found %d new unclassified cookie(s) during today's scan.\n\nPlease review and categorize them here: %s", 'consentforge' ),
+                    \__( "ConsentForge found %d new unclassified cookie(s) during today's scan.\n\nPlease review and categorize them here: %s", 'consentforge' ),
                     $count,
-                    admin_url( 'admin.php?page=consentforge-scanner' )
+                    \admin_url( 'admin.php?page=consentforge-scanner' )
                 )
             );
         }

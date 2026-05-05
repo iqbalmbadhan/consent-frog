@@ -22,7 +22,7 @@ class AdminRestApi {
     }
 
     private function __construct() {
-        add_action( 'rest_api_init', [ $this, 'register_routes' ] );
+        \add_action( 'rest_api_init', [ $this, 'register_routes' ] );
     }
 
     public function register_routes(): void {
@@ -47,7 +47,7 @@ class AdminRestApi {
         ];
 
         foreach ( $routes as [ $path, $method, $callback ] ) {
-            register_rest_route( $ns, $path, [
+            \register_rest_route( $ns, $path, [
                 'methods'             => $method,
                 'callback'            => [ $this, $callback ],
                 'permission_callback' => $auth,
@@ -56,7 +56,7 @@ class AdminRestApi {
     }
 
     public function require_admin( WP_REST_Request $request ): bool {
-        return current_user_can( 'manage_options' );
+        return \current_user_can( 'manage_options' );
     }
 
     public function get_dashboard_stats( WP_REST_Request $request ): WP_REST_Response {
@@ -71,8 +71,8 @@ class AdminRestApi {
     }
 
     public function get_cookies( WP_REST_Request $request ): WP_REST_Response {
-        $page     = absint( $request->get_param( 'page' ) ?? 1 );
-        $category = sanitize_text_field( $request->get_param( 'category' ) ?? '' );
+        $page     = \absint( $request->get_param( 'page' ) ?? 1 );
+        $category = \sanitize_text_field( $request->get_param( 'category' ) ?? '' );
         $cookies  = CookieRegistry::instance()->get_all( false );
 
         if ( $category ) {
@@ -96,20 +96,20 @@ class AdminRestApi {
         $data = $this->sanitize_cookie_data( $request->get_params() );
         $id   = CookieRegistry::instance()->add( $data );
         if ( ! $id ) {
-            return new WP_REST_Response( [ 'message' => __( 'Could not create cookie.', 'consentforge' ) ], 400 );
+            return new WP_REST_Response( [ 'message' => \__( 'Could not create cookie.', 'consentforge' ) ], 400 );
         }
         return new WP_REST_Response( [ 'id' => $id ], 201 );
     }
 
     public function update_cookie( WP_REST_Request $request ): WP_REST_Response {
-        $id   = absint( $request->get_param( 'id' ) );
+        $id   = \absint( $request->get_param( 'id' ) );
         $data = $this->sanitize_cookie_data( $request->get_params() );
         CookieRegistry::instance()->update( $id, $data );
         return new WP_REST_Response( [ 'success' => true ], 200 );
     }
 
     public function delete_cookie( WP_REST_Request $request ): WP_REST_Response {
-        CookieRegistry::instance()->delete( absint( $request->get_param( 'id' ) ) );
+        CookieRegistry::instance()->delete( \absint( $request->get_param( 'id' ) ) );
         return new WP_REST_Response( null, 204 );
     }
 
@@ -124,19 +124,19 @@ class AdminRestApi {
 
     public function get_consent_logs( WP_REST_Request $request ): WP_REST_Response {
         $args = [
-            'per_page'  => min( absint( $request->get_param( 'per_page' ) ?? 20 ), 100 ),
-            'page'      => max( 1, absint( $request->get_param( 'page' ) ?? 1 ) ),
-            'date_from' => sanitize_text_field( $request->get_param( 'date_from' ) ?? '' ),
-            'date_to'   => sanitize_text_field( $request->get_param( 'date_to' ) ?? '' ),
+            'per_page'  => min( \absint( $request->get_param( 'per_page' ) ?? 20 ), 100 ),
+            'page'      => max( 1, \absint( $request->get_param( 'page' ) ?? 1 ) ),
+            'date_from' => \sanitize_text_field( $request->get_param( 'date_from' ) ?? '' ),
+            'date_to'   => \sanitize_text_field( $request->get_param( 'date_to' ) ?? '' ),
         ];
         $logs = ConsentLogger::instance()->get_logs( $args );
         return new WP_REST_Response( $logs, 200 );
     }
 
     public function get_receipt( WP_REST_Request $request ): WP_REST_Response {
-        $receipt = ReceiptGenerator::instance()->get_receipt( sanitize_text_field( $request->get_param( 'id' ) ) );
+        $receipt = ReceiptGenerator::instance()->get_receipt( \sanitize_text_field( $request->get_param( 'id' ) ) );
         if ( ! $receipt ) {
-            return new WP_REST_Response( [ 'message' => __( 'Receipt not found.', 'consentforge' ) ], 404 );
+            return new WP_REST_Response( [ 'message' => \__( 'Receipt not found.', 'consentforge' ) ], 404 );
         }
         return new WP_REST_Response( $receipt, 200 );
     }
@@ -150,17 +150,17 @@ class AdminRestApi {
     }
 
     public function process_dsar( WP_REST_Request $request ): WP_REST_Response {
-        DsarHandler::instance()->process_request( absint( $request->get_param( 'id' ) ) );
+        DsarHandler::instance()->process_request( \absint( $request->get_param( 'id' ) ) );
         return new WP_REST_Response( [ 'success' => true ], 200 );
     }
 
     public function get_settings( WP_REST_Request $request ): WP_REST_Response {
-        $group = sanitize_key( $request->get_param( 'group' ) );
+        $group = \sanitize_key( $request->get_param( 'group' ) );
         return new WP_REST_Response( SettingsManager::instance()->get_group( $group ), 200 );
     }
 
     public function update_settings( WP_REST_Request $request ): WP_REST_Response {
-        $group    = sanitize_key( $request->get_param( 'group' ) );
+        $group    = \sanitize_key( $request->get_param( 'group' ) );
         $settings = $request->get_params();
         unset( $settings['group'] );
         SettingsManager::instance()->set_group( $group, $settings );
@@ -200,14 +200,14 @@ class AdminRestApi {
 
     private function sanitize_cookie_data( array $params ): array {
         return [
-            'cookie_name'      => sanitize_text_field( $params['cookie_name'] ?? '' ),
-            'cookie_domain'    => sanitize_text_field( $params['cookie_domain'] ?? '' ),
-            'category'         => sanitize_text_field( $params['category'] ?? 'unclassified' ),
-            'provider'         => sanitize_text_field( $params['provider'] ?? '' ),
-            'purpose'          => sanitize_textarea_field( $params['purpose'] ?? '' ),
-            'duration'         => sanitize_text_field( $params['duration'] ?? '' ),
+            'cookie_name'      => \sanitize_text_field( $params['cookie_name'] ?? '' ),
+            'cookie_domain'    => \sanitize_text_field( $params['cookie_domain'] ?? '' ),
+            'category'         => \sanitize_text_field( $params['category'] ?? 'unclassified' ),
+            'provider'         => \sanitize_text_field( $params['provider'] ?? '' ),
+            'purpose'          => \sanitize_textarea_field( $params['purpose'] ?? '' ),
+            'duration'         => \sanitize_text_field( $params['duration'] ?? '' ),
             'is_third_party'   => (int) ( $params['is_third_party'] ?? 0 ),
-            'script_pattern'   => sanitize_text_field( $params['script_pattern'] ?? '' ),
+            'script_pattern'   => \sanitize_text_field( $params['script_pattern'] ?? '' ),
             'is_auto_detected' => (int) ( $params['is_auto_detected'] ?? 0 ),
         ];
     }

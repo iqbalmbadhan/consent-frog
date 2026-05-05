@@ -15,7 +15,7 @@ class DataRetention {
     }
 
     private function __construct() {
-        add_action( 'cf_cleanup_old_data', [ $this, 'cleanup' ] );
+        \add_action( 'cf_cleanup_old_data', [ $this, 'cleanup' ] );
     }
 
     public function cleanup(): void {
@@ -26,7 +26,7 @@ class DataRetention {
 
     public function cleanup_consent_logs(): int {
         global $wpdb;
-        $days  = absint( SettingsManager::instance()->get( 'data_retention_days', '1095', 'compliance' ) );
+        $days  = \absint( SettingsManager::instance()->get( 'data_retention_days', '1095', 'compliance' ) );
         $table = $wpdb->prefix . 'cf_consent_logs';
         return (int) $wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
             $wpdb->prepare(

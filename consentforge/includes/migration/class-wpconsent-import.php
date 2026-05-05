@@ -15,12 +15,12 @@ class WpConsentImport {
     }
 
     public function can_import(): bool {
-        return (bool) get_option( 'wpconsent_cookies' ) || (bool) get_option( 'wpconsent_version' );
+        return (bool) \get_option( 'wpconsent_cookies' ) || (bool) \get_option( 'wpconsent_version' );
     }
 
     public function import(): array {
         $result  = [ 'cookies_migrated' => 0, 'settings_migrated' => 0, 'warnings' => [] ];
-        $cookies = get_option( 'wpconsent_cookies', [] );
+        $cookies = \get_option( 'wpconsent_cookies', [] );
 
         if ( empty( $cookies ) ) {
             $result['warnings'][] = 'No WPConsent cookie data found.';
@@ -32,11 +32,11 @@ class WpConsentImport {
         foreach ( (array) $cookies as $c ) {
             $cat      = $map[ strtolower( $c['category'] ?? '' ) ] ?? 'unclassified';
             $inserted = CookieRegistry::instance()->add( [
-                'cookie_name'      => sanitize_text_field( $c['name'] ?? '' ),
+                'cookie_name'      => \sanitize_text_field( $c['name'] ?? '' ),
                 'category'         => $cat,
-                'provider'         => sanitize_text_field( $c['plugin'] ?? '' ),
-                'purpose'          => sanitize_textarea_field( $c['description'] ?? '' ),
-                'duration'         => sanitize_text_field( $c['expiration'] ?? '' ),
+                'provider'         => \sanitize_text_field( $c['plugin'] ?? '' ),
+                'purpose'          => \sanitize_textarea_field( $c['description'] ?? '' ),
+                'duration'         => \sanitize_text_field( $c['expiration'] ?? '' ),
                 'is_auto_detected' => 0,
             ] );
             if ( $inserted ) {

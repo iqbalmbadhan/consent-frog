@@ -29,11 +29,11 @@ class FeatureGate {
     public static function require_plan( string $feature ): void {
         if ( ! static::can( $feature ) ) {
             $required = static::$gates[ $feature ][0] ?? 'pro';
-            wp_die( sprintf(
+            \wp_die( sprintf(
                 /* translators: 1: feature name, 2: required plan */
-                esc_html__( 'The feature "%1$s" requires the %2$s plan or higher.', 'consentforge' ),
-                esc_html( $feature ),
-                esc_html( ucfirst( $required ) )
+                \esc_html__( 'The feature "%1$s" requires the %2$s plan or higher.', 'consentforge' ),
+                \esc_html( $feature ),
+                \esc_html( ucfirst( $required ) )
             ) );
         }
     }

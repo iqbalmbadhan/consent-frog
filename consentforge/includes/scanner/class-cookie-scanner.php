@@ -26,7 +26,7 @@ class CookieScanner {
                 'scan_type'   => $scan_type,
                 'scanned_url' => implode( ', ', array_slice( $urls, 0, 3 ) ),
                 'scan_status' => 'running',
-                'created_at'  => current_time( 'mysql' ),
+                'created_at'  => \current_time( 'mysql' ),
             ]
         );
         $scan_id = (int) $wpdb->insert_id;
@@ -66,10 +66,10 @@ class CookieScanner {
         $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
             $table,
             [
-                'cookies_found'       => wp_json_encode( $all_cookies ),
-                'scripts_found'       => wp_json_encode( $all_scripts ),
-                'local_storage_found' => wp_json_encode( $all_storage ),
-                'pixels_found'        => wp_json_encode( $all_pixels ),
+                'cookies_found'       => \wp_json_encode( $all_cookies ),
+                'scripts_found'       => \wp_json_encode( $all_scripts ),
+                'local_storage_found' => \wp_json_encode( $all_storage ),
+                'pixels_found'        => \wp_json_encode( $all_pixels ),
                 'new_cookies_count'   => $new_count,
                 'categorized_count'   => count( $all_cookies ) - $uncategorized,
                 'uncategorized_count' => $uncategorized,
@@ -80,23 +80,23 @@ class CookieScanner {
             [ 'id' => $scan_id ]
         );
 
-        do_action( 'consentforge/scan_completed', $scan_id, [] );
+        \do_action( 'consentforge/scan_completed', $scan_id, [] );
 
         return $scan_id;
     }
 
     public function fetch_page( string $url ): string|false {
-        $response = wp_remote_get( $url, [
+        $response = \wp_remote_get( $url, [
             'timeout'    => 30,
             'user-agent' => 'ConsentForge-Scanner/1.0 (WordPress Cookie Scanner)',
             'sslverify'  => false,
         ] );
 
-        if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+        if ( \is_wp_error( $response ) || 200 !== \wp_remote_retrieve_response_code( $response ) ) {
             return false;
         }
 
-        return wp_remote_retrieve_body( $response );
+        return \wp_remote_retrieve_body( $response );
     }
 
     public function detect_scripts( string $html ): array {
@@ -109,7 +109,7 @@ class CookieScanner {
             if ( str_starts_with( $src, 'data:' ) ) {
                 continue;
             }
-            $src    = esc_url_raw( $src );
+            $src    = \esc_url_raw( $src );
             $result = $categorizer->categorize_script( $src );
             if ( 'unclassified' !== $result['category'] || $this->is_third_party_src( $src ) ) {
                 $scripts[] = [
@@ -134,7 +134,7 @@ class CookieScanner {
 
         $names = array_merge( $m1[1] ?? [], $m2[1] ?? [] );
         foreach ( $names as $name ) {
-            $name   = trim( sanitize_text_field( $name ) );
+            $name   = trim( \sanitize_text_field( $name ) );
             $result = $categorizer->categorize( $name );
             $cookies[] = [
                 'name'     => $name,
@@ -151,11 +151,11 @@ class CookieScanner {
         $items = [];
         preg_match_all( '/localStorage\.setItem\(["\']([^"\']+)["\']/', $html, $matches );
         foreach ( $matches[1] as $key ) {
-            $items[] = [ 'key' => sanitize_text_field( $key ), 'type' => 'localStorage' ];
+            $items[] = [ 'key' => \sanitize_text_field( $key ), 'type' => 'localStorage' ];
         }
         preg_match_all( '/sessionStorage\.setItem\(["\']([^"\']+)["\']/', $html, $matches );
         foreach ( $matches[1] as $key ) {
-            $items[] = [ 'key' => sanitize_text_field( $key ), 'type' => 'sessionStorage' ];
+            $items[] = [ 'key' => \sanitize_text_field( $key ), 'type' => 'sessionStorage' ];
         }
         return $items;
     }
@@ -164,7 +164,7 @@ class CookieScanner {
         $pixels = [];
         preg_match_all( '/<img[^>]+(?:width=["\']0["\']|height=["\']0["\']|style=["\'][^"\']*display:\s*none)[^>]*src=["\']([^"\']+)["\'][^>]*>/i', $html, $matches );
         foreach ( $matches[1] as $src ) {
-            $pixels[] = [ 'src' => esc_url_raw( $src ) ];
+            $pixels[] = [ 'src' => \esc_url_raw( $src ) ];
         }
         return $pixels;
     }
@@ -190,24 +190,24 @@ class CookieScanner {
     }
 
     private function get_urls_to_scan(): array {
-        $urls   = [ home_url( '/' ) ];
-        $policy = get_privacy_policy_url();
+        $urls   = [ \home_url( '/' ) ];
+        $policy = \get_privacy_policy_url();
         if ( $policy ) {
             $urls[] = $policy;
         }
 
         // A recent post
-        $posts = get_posts( [ 'numberposts' => 1, 'post_status' => 'publish' ] );
+        $posts = \get_posts( [ 'numberposts' => 1, 'post_status' => 'publish' ] );
         if ( ! empty( $posts ) ) {
-            $urls[] = get_permalink( $posts[0]->ID );
+            $urls[] = \get_permalink( $posts[0]->ID );
         }
 
         return array_unique( $urls );
     }
 
     private function is_third_party_src( string $src ): bool {
-        $site_host = wp_parse_url( home_url(), PHP_URL_HOST );
-        $src_host  = wp_parse_url( $src, PHP_URL_HOST );
+        $site_host = \wp_parse_url( \home_url(), PHP_URL_HOST );
+        $src_host  = \wp_parse_url( $src, PHP_URL_HOST );
         return $src_host && $src_host !== $site_host;
     }
 }

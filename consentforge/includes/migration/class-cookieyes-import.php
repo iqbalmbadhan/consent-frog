@@ -16,12 +16,12 @@ class CookieYesImport {
     }
 
     public function can_import(): bool {
-        return (bool) get_option( 'cky_consent_state' ) || (bool) get_option( 'cookieyes_settings' );
+        return (bool) \get_option( 'cky_consent_state' ) || (bool) \get_option( 'cookieyes_settings' );
     }
 
     public function import(): array {
         $result   = [ 'cookies_migrated' => 0, 'settings_migrated' => 0, 'warnings' => [] ];
-        $raw      = get_option( 'cky_cookie_list', [] );
+        $raw      = \get_option( 'cky_cookie_list', [] );
 
         if ( empty( $raw ) ) {
             $result['warnings'][] = 'No CookieYes cookie list found.';
@@ -34,10 +34,10 @@ class CookieYesImport {
             $cf_cat = $map[ strtolower( (string) $category ) ] ?? 'unclassified';
             foreach ( (array) $cookies as $c ) {
                 $inserted = CookieRegistry::instance()->add( [
-                    'cookie_name'      => sanitize_text_field( $c['name'] ?? (string) $c ),
+                    'cookie_name'      => \sanitize_text_field( $c['name'] ?? (string) $c ),
                     'category'         => $cf_cat,
-                    'provider'         => sanitize_text_field( $c['domain'] ?? '' ),
-                    'duration'         => sanitize_text_field( $c['duration'] ?? '' ),
+                    'provider'         => \sanitize_text_field( $c['domain'] ?? '' ),
+                    'duration'         => \sanitize_text_field( $c['duration'] ?? '' ),
                     'is_auto_detected' => 0,
                 ] );
                 if ( $inserted ) {
@@ -47,7 +47,7 @@ class CookieYesImport {
         }
 
         // Import basic banner colors
-        $settings = get_option( 'cookieyes_settings', [] );
+        $settings = \get_option( 'cookieyes_settings', [] );
         if ( ! empty( $settings['button_color'] ) ) {
             SettingsManager::instance()->set( 'primary_color', sanitize_hex_color( $settings['button_color'] ), 'banner' );
             $result['settings_migrated']++;

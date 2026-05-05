@@ -69,8 +69,8 @@ class CookieRegistry {
 		global $wpdb;
 
 		$insert               = $this->prepare_row( $cookie_data );
-		$insert['created_at'] = current_time( 'mysql', true );
-		$insert['updated_at'] = current_time( 'mysql', true );
+		$insert['created_at'] = \current_time( 'mysql', true );
+		$insert['updated_at'] = \current_time( 'mysql', true );
 
 		$result = $wpdb->insert( $this->table, $insert, $this->get_formats( $insert ) );
 
@@ -85,7 +85,7 @@ class CookieRegistry {
 		global $wpdb;
 
 		$update               = $this->prepare_row( $data );
-		$update['updated_at'] = current_time( 'mysql', true );
+		$update['updated_at'] = \current_time( 'mysql', true );
 
 		$result = $wpdb->update(
 			$this->table,
@@ -176,7 +176,7 @@ class CookieRegistry {
 			$existing_id = $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT id FROM {$this->table} WHERE name = %s LIMIT 1",
-					sanitize_text_field( $cookie_data['name'] )
+					\sanitize_text_field( $cookie_data['name'] )
 				)
 			);
 
@@ -198,7 +198,7 @@ class CookieRegistry {
 		$allowed_categories = [ 'essential', 'analytics', 'performance', 'marketing' ];
 
 		if ( isset( $data['name'] ) ) {
-			$row['name'] = sanitize_text_field( $data['name'] );
+			$row['name'] = \sanitize_text_field( $data['name'] );
 		}
 
 		if ( isset( $data['category'] ) ) {
@@ -208,23 +208,23 @@ class CookieRegistry {
 		}
 
 		if ( isset( $data['provider'] ) ) {
-			$row['provider'] = sanitize_text_field( $data['provider'] );
+			$row['provider'] = \sanitize_text_field( $data['provider'] );
 		}
 
 		if ( isset( $data['purpose'] ) ) {
-			$row['purpose'] = sanitize_textarea_field( $data['purpose'] );
+			$row['purpose'] = \sanitize_textarea_field( $data['purpose'] );
 		}
 
 		if ( isset( $data['domain'] ) ) {
-			$row['domain'] = sanitize_text_field( $data['domain'] );
+			$row['domain'] = \sanitize_text_field( $data['domain'] );
 		}
 
 		if ( isset( $data['duration'] ) ) {
-			$row['duration'] = sanitize_text_field( $data['duration'] );
+			$row['duration'] = \sanitize_text_field( $data['duration'] );
 		}
 
 		if ( isset( $data['script_pattern'] ) ) {
-			$row['script_pattern'] = sanitize_text_field( $data['script_pattern'] );
+			$row['script_pattern'] = \sanitize_text_field( $data['script_pattern'] );
 		}
 
 		if ( isset( $data['active'] ) ) {

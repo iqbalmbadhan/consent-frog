@@ -13,7 +13,7 @@ class GpcDetector {
     }
 
     private function __construct() {
-        add_action( 'init', [ $this, 'detect_and_apply' ] );
+        \add_action( 'init', [ $this, 'detect_and_apply' ] );
     }
 
     public function detect(): bool {
@@ -45,27 +45,27 @@ class GpcDetector {
         $visitor_hash = $this->get_visitor_hash();
 
         // Set transient so PHP can act on subsequent requests
-        set_transient( 'cf_gpc_' . $visitor_hash, '1', HOUR_IN_SECONDS );
+        \set_transient( 'cf_gpc_' . $visitor_hash, '1', HOUR_IN_SECONDS );
 
         // Set JS-readable cookie
         if ( ! headers_sent() ) {
             setcookie( 'cf_gpc', '1', [
                 'expires'  => time() + DAY_IN_SECONDS,
                 'path'     => '/',
-                'secure'   => is_ssl(),
+                'secure'   => \is_ssl(),
                 'httponly' => false,
                 'samesite' => 'Lax',
             ] );
         }
 
-        do_action( 'consentforge/gpc_detected', $visitor_hash );
+        \do_action( 'consentforge/gpc_detected', $visitor_hash );
     }
 
     public function is_active_for_visitor(): bool {
         if ( isset( $_COOKIE['cf_gpc'] ) && '1' === $_COOKIE['cf_gpc'] ) {
             return true;
         }
-        return (bool) get_transient( 'cf_gpc_' . $this->get_visitor_hash() );
+        return (bool) \get_transient( 'cf_gpc_' . $this->get_visitor_hash() );
     }
 
     public function get_visitor_hash(): string {

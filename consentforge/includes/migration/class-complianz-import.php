@@ -16,7 +16,7 @@ class ComplianzImport {
     }
 
     public function can_import(): bool {
-        return (bool) get_option( 'cmplz_version' );
+        return (bool) \get_option( 'cmplz_version' );
     }
 
     public function import(): array {
@@ -43,12 +43,12 @@ class ComplianzImport {
         foreach ( (array) $cookies as $c ) {
             $category = $map[ strtolower( $c['category'] ?? '' ) ] ?? 'unclassified';
             $inserted = CookieRegistry::instance()->add( [
-                'cookie_name'      => sanitize_text_field( $c['name'] ?? '' ),
-                'cookie_domain'    => sanitize_text_field( $c['domain'] ?? '' ),
+                'cookie_name'      => \sanitize_text_field( $c['name'] ?? '' ),
+                'cookie_domain'    => \sanitize_text_field( $c['domain'] ?? '' ),
                 'category'         => $category,
-                'provider'         => sanitize_text_field( $c['service'] ?? '' ),
-                'purpose'          => sanitize_textarea_field( $c['description'] ?? '' ),
-                'duration'         => sanitize_text_field( $c['retention_period'] ?? '' ),
+                'provider'         => \sanitize_text_field( $c['service'] ?? '' ),
+                'purpose'          => \sanitize_textarea_field( $c['description'] ?? '' ),
+                'duration'         => \sanitize_text_field( $c['retention_period'] ?? '' ),
                 'is_auto_detected' => 0,
             ] );
             if ( $inserted ) {
@@ -59,7 +59,7 @@ class ComplianzImport {
     }
 
     private function import_settings( array &$warnings ): int {
-        $options = get_option( 'cmplz_options', [] );
+        $options = \get_option( 'cmplz_options', [] );
         if ( empty( $options ) ) {
             $warnings[] = 'No Complianz options found; skipping settings import.';
             return 0;

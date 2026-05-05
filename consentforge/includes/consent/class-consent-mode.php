@@ -16,7 +16,7 @@ class ConsentMode {
 
     private function __construct() {
         // Must run at priority 1 so it fires before any GTM/GA script output
-        add_action( 'wp_head', [ $this, 'output_gtag_defaults' ], 1 );
+        \add_action( 'wp_head', [ $this, 'output_gtag_defaults' ], 1 );
     }
 
     public function output_gtag_defaults(): void {
@@ -27,7 +27,7 @@ class ConsentMode {
 <script id="cf-consent-mode-defaults">
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
-gtag('consent', '<?php echo esc_js( $type ); ?>', <?php echo wp_json_encode( $signals ); ?>);
+gtag('consent', '<?php echo \esc_js( $type ); ?>', <?php echo \wp_json_encode( $signals ); ?>);
 </script>
         <?php
     }

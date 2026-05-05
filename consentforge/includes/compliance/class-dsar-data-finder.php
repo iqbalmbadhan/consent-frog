@@ -13,7 +13,7 @@ class DsarDataFinder {
     }
 
     public function find_all_data( string $email ): array {
-        $email   = sanitize_email( $email );
+        $email   = \sanitize_email( $email );
         $sources = [
             'wordpress_user'   => $this->find_wordpress_user( $email ),
             'woocommerce'      => $this->find_woocommerce_orders( $email ),
@@ -24,11 +24,11 @@ class DsarDataFinder {
             'contact_form_7'   => $this->find_contact_form_7( $email ),
         ];
 
-        return apply_filters( 'consentforge/dsar_data_sources', $sources, $email );
+        return \apply_filters( 'consentforge/dsar_data_sources', $sources, $email );
     }
 
     public function find_wordpress_user( string $email ): ?array {
-        $user = get_user_by( 'email', $email );
+        $user = \get_user_by( 'email', $email );
         if ( ! $user ) {
             return null;
         }
@@ -70,7 +70,7 @@ class DsarDataFinder {
     }
 
     public function find_comments( string $email ): array {
-        $comments = get_comments( [
+        $comments = \get_comments( [
             'author_email' => $email,
             'number'       => 100,
             'status'       => 'all',
@@ -79,7 +79,7 @@ class DsarDataFinder {
             'id'         => $c->comment_ID,
             'post_id'    => $c->comment_post_ID,
             'date'       => $c->comment_date,
-            'content'    => wp_strip_all_tags( $c->comment_content ),
+            'content'    => \wp_strip_all_tags( $c->comment_content ),
             'author'     => $c->comment_author,
             'ip'         => $c->comment_author_IP,
         ], $comments );
@@ -88,7 +88,7 @@ class DsarDataFinder {
     public function find_consent_logs( string $email ): array {
         global $wpdb;
         $table  = $wpdb->prefix . 'cf_consent_logs';
-        $user   = get_user_by( 'email', $email );
+        $user   = \get_user_by( 'email', $email );
         $result = [];
 
         if ( $user ) {
@@ -108,7 +108,7 @@ class DsarDataFinder {
         }
         $search   = [ 'field_filters' => [ [ 'key' => 'email', 'value' => $email ] ] ];
         $entries  = \GFAPI::get_entries( 0, $search, null, [ 'offset' => 0, 'page_size' => 100 ] );
-        if ( is_wp_error( $entries ) ) {
+        if ( \is_wp_error( $entries ) ) {
             return [];
         }
         return array_map( fn( $e ) => [
@@ -132,10 +132,10 @@ class DsarDataFinder {
     }
 
     public function find_contact_form_7( string $email ): array {
-        if ( ! post_type_exists( 'flamingo_inbound' ) ) {
+        if ( ! \post_type_exists( 'flamingo_inbound' ) ) {
             return [];
         }
-        $posts = get_posts( [
+        $posts = \get_posts( [
             'post_type'      => 'flamingo_inbound',
             'meta_key'       => '_from_email', // phpcs:ignore WordPress.DB.SlowDBQuery
             'meta_value'     => $email,        // phpcs:ignore WordPress.DB.SlowDBQuery

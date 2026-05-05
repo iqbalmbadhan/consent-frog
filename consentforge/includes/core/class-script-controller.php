@@ -26,10 +26,10 @@ class ScriptController {
 	}
 
 	private function __construct() {
-		add_action( 'wp_enqueue_scripts', [ $this, 'register_deferred_scripts' ], 1 );
-		add_filter( 'script_loader_tag', [ $this, 'filter_script_tag' ], 10, 3 );
-		add_action( 'wp_head', [ $this, 'output_config' ] );
-		add_action( 'wp_footer', [ $this, 'enqueue_banner' ] );
+		\add_action( 'wp_enqueue_scripts', [ $this, 'register_deferred_scripts' ], 1 );
+		\add_filter( 'script_loader_tag', [ $this, 'filter_script_tag' ], 10, 3 );
+		\add_action( 'wp_head', [ $this, 'output_config' ] );
+		\add_action( 'wp_footer', [ $this, 'enqueue_banner' ] );
 	}
 
 	public function register_deferred_scripts(): void {
@@ -71,7 +71,7 @@ class ScriptController {
 	public function filter_script_tag( string $tag, string $handle, string $src ): string {
 		$category = $this->get_script_category( $src );
 
-		$should_block = apply_filters(
+		$should_block = \apply_filters(
 			'consentforge/should_block_script',
 			$this->should_block_script( $src, $category ),
 			$src,
@@ -97,7 +97,7 @@ class ScriptController {
 			$tag = str_replace( '<script ', '<script type="text/plain" ', $tag );
 		}
 
-		$escaped_category = esc_attr( $category );
+		$escaped_category = \esc_attr( $category );
 
 		if ( ! str_contains( $tag, 'data-cf-category' ) ) {
 			$tag = str_replace(
@@ -138,7 +138,7 @@ class ScriptController {
 		$config = [
 			'version'       => '1.0',
 			'cookieName'    => 'cf_consent',
-			'cookieExpiry'  => absint( $general_config['cookie_lifetime_days'] ?? 365 ),
+			'cookieExpiry'  => \absint( $general_config['cookie_lifetime_days'] ?? 365 ),
 			'gpcBinding'    => true,
 			'defaultState'  => [
 				'essential'   => true,
@@ -157,22 +157,22 @@ class ScriptController {
 				'timestamp'   => $consent_state['timestamp'],
 			],
 			'banner'        => [
-				'title'          => wp_kses_post( $banner_config['title'] ?? '' ),
-				'description'    => wp_kses_post( $banner_config['description'] ?? '' ),
-				'acceptAllText'  => sanitize_text_field( $banner_config['accept_all_text'] ?? '' ),
-				'rejectAllText'  => sanitize_text_field( $banner_config['reject_all_text'] ?? '' ),
-				'customizeText'  => sanitize_text_field( $banner_config['customize_text'] ?? '' ),
-				'position'       => sanitize_text_field( $banner_config['position'] ?? 'bottom' ),
-				'layout'         => sanitize_text_field( $banner_config['layout'] ?? 'bar' ),
+				'title'          => \wp_kses_post( $banner_config['title'] ?? '' ),
+				'description'    => \wp_kses_post( $banner_config['description'] ?? '' ),
+				'acceptAllText'  => \sanitize_text_field( $banner_config['accept_all_text'] ?? '' ),
+				'rejectAllText'  => \sanitize_text_field( $banner_config['reject_all_text'] ?? '' ),
+				'customizeText'  => \sanitize_text_field( $banner_config['customize_text'] ?? '' ),
+				'position'       => \sanitize_text_field( $banner_config['position'] ?? 'bottom' ),
+				'layout'         => \sanitize_text_field( $banner_config['layout'] ?? 'bar' ),
 				'primaryColor'   => sanitize_hex_color( $banner_config['primary_color'] ?? '#0a6e4f' ) ?? '#0a6e4f',
 				'showOnRevisit'  => (bool) ( $banner_config['show_on_revisit'] ?? false ),
 			],
 			'scriptPatterns' => $all_patterns,
-			'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
+			'ajaxUrl'        => \admin_url( 'admin-ajax.php' ),
 			'nonce'          => wp_create_nonce( 'consentforge_consent' ),
 		];
 
-		$json = wp_json_encode( $config, JSON_HEX_TAG | JSON_HEX_AMP );
+		$json = \wp_json_encode( $config, JSON_HEX_TAG | JSON_HEX_AMP );
 
 		echo "<script id=\"cf-config\">\n";
 		echo "window.CFConfig = " . $json . ";\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

@@ -41,14 +41,14 @@ class MigrationManager {
 
     public function migrate_from( string $plugin ): array|WP_Error {
         if ( ! $this->can_migrate( $plugin ) ) {
-            return new WP_Error( 'not_found', sprintf( __( 'Plugin %s not detected.', 'consentforge' ), $plugin ) );
+            return new WP_Error( 'not_found', sprintf( \__( 'Plugin %s not detected.', 'consentforge' ), $plugin ) );
         }
 
         return match ( $plugin ) {
             'complianz' => ComplianzImport::instance()->import(),
             'cookieyes' => CookieYesImport::instance()->import(),
             'wpconsent' => WpConsentImport::instance()->import(),
-            default     => new WP_Error( 'unsupported', __( 'Unsupported plugin.', 'consentforge' ) ),
+            default     => new WP_Error( 'unsupported', \__( 'Unsupported plugin.', 'consentforge' ) ),
         };
     }
 

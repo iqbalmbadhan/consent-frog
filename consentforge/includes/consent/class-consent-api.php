@@ -21,13 +21,13 @@ class ConsentApi {
     }
 
     private function __construct() {
-        add_action( 'rest_api_init', [ $this, 'register_routes' ] );
+        \add_action( 'rest_api_init', [ $this, 'register_routes' ] );
     }
 
     public function register_routes(): void {
         $ns = 'consentforge/v1';
 
-        register_rest_route( $ns, '/consent', [
+        \register_rest_route( $ns, '/consent', [
             'methods'             => 'POST',
             'callback'            => [ $this, 'record_consent' ],
             'permission_callback' => [ $this, 'check_rate_limit' ],
@@ -37,19 +37,19 @@ class ConsentApi {
             ],
         ] );
 
-        register_rest_route( $ns, '/consent/state', [
+        \register_rest_route( $ns, '/consent/state', [
             'methods'             => 'GET',
             'callback'            => [ $this, 'get_state' ],
             'permission_callback' => '__return_true',
         ] );
 
-        register_rest_route( $ns, '/settings/banner', [
+        \register_rest_route( $ns, '/settings/banner', [
             'methods'             => 'GET',
             'callback'            => [ $this, 'get_banner_config' ],
             'permission_callback' => '__return_true',
         ] );
 
-        register_rest_route( $ns, '/cookies/categories', [
+        \register_rest_route( $ns, '/cookies/categories', [
             'methods'             => 'GET',
             'callback'            => [ $this, 'get_categories' ],
             'permission_callback' => '__return_true',
@@ -59,17 +59,17 @@ class ConsentApi {
     public function check_rate_limit( WP_REST_Request $request ): bool {
         $ip_hash  = hash( 'sha256', $_SERVER['REMOTE_ADDR'] ?? '' );
         $key      = 'cf_rate_' . $ip_hash;
-        $count    = (int) get_transient( $key );
+        $count    = (int) \get_transient( $key );
         if ( $count >= 10 ) {
             return false;
         }
-        set_transient( $key, $count + 1, MINUTE_IN_SECONDS );
+        \set_transient( $key, $count + 1, MINUTE_IN_SECONDS );
         return true;
     }
 
     public function record_consent( WP_REST_Request $request ): WP_REST_Response {
         $categories_raw = $request->get_param( 'categories' );
-        $source         = sanitize_text_field( $request->get_param( 'source' ) ?? 'banner_accept' );
+        $source         = \sanitize_text_field( $request->get_param( 'source' ) ?? 'banner_accept' );
         $gpc            = (bool) ( $request->get_param( 'gpc' ) ?? false );
 
         $allowed = [ 'essential', 'analytics', 'performance', 'marketing' ];
@@ -110,10 +110,10 @@ class ConsentApi {
     public function get_categories( WP_REST_Request $request ): WP_REST_Response {
         $settings = SettingsManager::instance();
         return new WP_REST_Response( [
-            'essential'   => [ 'label' => __( 'Essential', 'consentforge' ),   'model' => 'exempt',   'default' => true ],
-            'analytics'   => [ 'label' => __( 'Analytics', 'consentforge' ),   'model' => 'opt_out',  'default' => true ],
-            'performance' => [ 'label' => __( 'Performance', 'consentforge' ), 'model' => 'opt_out',  'default' => true ],
-            'marketing'   => [ 'label' => __( 'Marketing', 'consentforge' ),   'model' => 'opt_in',   'default' => false ],
+            'essential'   => [ 'label' => \__( 'Essential', 'consentforge' ),   'model' => 'exempt',   'default' => true ],
+            'analytics'   => [ 'label' => \__( 'Analytics', 'consentforge' ),   'model' => 'opt_out',  'default' => true ],
+            'performance' => [ 'label' => \__( 'Performance', 'consentforge' ), 'model' => 'opt_out',  'default' => true ],
+            'marketing'   => [ 'label' => \__( 'Marketing', 'consentforge' ),   'model' => 'opt_in',   'default' => false ],
         ], 200 );
     }
 }

@@ -17,14 +17,14 @@ class AdminMenu {
     }
 
     private function __construct() {
-        add_action( 'admin_menu', [ $this, 'register_menus' ] );
-        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
+        \add_action( 'admin_menu', [ $this, 'register_menus' ] );
+        \add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
     }
 
     public function register_menus(): void {
         add_menu_page(
-            __( 'ConsentForge', 'consentforge' ),
-            __( 'ConsentForge', 'consentforge' ),
+            \__( 'ConsentForge', 'consentforge' ),
+            \__( 'ConsentForge', 'consentforge' ),
             'manage_options',
             'consentforge',
             [ $this, 'render_page' ],
@@ -32,15 +32,15 @@ class AdminMenu {
             80
         );
 
-        add_submenu_page( 'consentforge', __( 'Dashboard', 'consentforge' ), __( 'Dashboard', 'consentforge' ), 'manage_options', 'consentforge', [ $this, 'render_page' ] );
-        add_submenu_page( 'consentforge', __( 'Cookie Scanner', 'consentforge' ), __( 'Cookie Scanner', 'consentforge' ), 'manage_options', 'consentforge#scanner', [ $this, 'render_page' ] );
-        add_submenu_page( 'consentforge', __( 'Banner Designer', 'consentforge' ), __( 'Banner Designer', 'consentforge' ), 'manage_options', 'consentforge#banner', [ $this, 'render_page' ] );
+        add_submenu_page( 'consentforge', \__( 'Dashboard', 'consentforge' ), \__( 'Dashboard', 'consentforge' ), 'manage_options', 'consentforge', [ $this, 'render_page' ] );
+        add_submenu_page( 'consentforge', \__( 'Cookie Scanner', 'consentforge' ), \__( 'Cookie Scanner', 'consentforge' ), 'manage_options', 'consentforge#scanner', [ $this, 'render_page' ] );
+        add_submenu_page( 'consentforge', \__( 'Banner Designer', 'consentforge' ), \__( 'Banner Designer', 'consentforge' ), 'manage_options', 'consentforge#banner', [ $this, 'render_page' ] );
 
         if ( FeatureGate::can( 'dsar_handling' ) ) {
-            add_submenu_page( 'consentforge', __( 'DSAR Requests', 'consentforge' ), __( 'DSAR Requests', 'consentforge' ), 'manage_options', 'consentforge#dsar', [ $this, 'render_page' ] );
+            add_submenu_page( 'consentforge', \__( 'DSAR Requests', 'consentforge' ), \__( 'DSAR Requests', 'consentforge' ), 'manage_options', 'consentforge#dsar', [ $this, 'render_page' ] );
         }
 
-        add_submenu_page( 'consentforge', __( 'Settings', 'consentforge' ), __( 'Settings', 'consentforge' ), 'manage_options', 'consentforge#settings', [ $this, 'render_page' ] );
+        add_submenu_page( 'consentforge', \__( 'Settings', 'consentforge' ), \__( 'Settings', 'consentforge' ), 'manage_options', 'consentforge#settings', [ $this, 'render_page' ] );
     }
 
     public function render_page(): void {
@@ -72,7 +72,7 @@ class AdminMenu {
 
         wp_localize_script( 'cf-admin', 'CFAdminData', [
             'nonce'       => wp_create_nonce( 'wp_rest' ),
-            'apiUrl'      => rest_url(),
+            'apiUrl'      => \rest_url(),
             'pluginUrl'   => CF_PLUGIN_URL,
             'version'     => CF_VERSION,
             'plan'        => $plan,
@@ -87,16 +87,16 @@ class AdminMenu {
             'settings'    => $settings_manager->get_general_config(),
             'bannerConfig'=> $settings_manager->get_banner_config(),
             'i18n'        => [
-                'dashboard'     => __( 'Dashboard', 'consentforge' ),
-                'scanner'       => __( 'Cookie Scanner', 'consentforge' ),
-                'banner'        => __( 'Banner Designer', 'consentforge' ),
-                'dsar'          => __( 'DSAR Requests', 'consentforge' ),
-                'settings'      => __( 'Settings', 'consentforge' ),
-                'save'          => __( 'Save Changes', 'consentforge' ),
-                'saving'        => __( 'Saving…', 'consentforge' ),
-                'saved'         => __( 'Saved!', 'consentforge' ),
-                'error'         => __( 'An error occurred.', 'consentforge' ),
-                'confirmDelete' => __( 'Are you sure? This cannot be undone.', 'consentforge' ),
+                'dashboard'     => \__( 'Dashboard', 'consentforge' ),
+                'scanner'       => \__( 'Cookie Scanner', 'consentforge' ),
+                'banner'        => \__( 'Banner Designer', 'consentforge' ),
+                'dsar'          => \__( 'DSAR Requests', 'consentforge' ),
+                'settings'      => \__( 'Settings', 'consentforge' ),
+                'save'          => \__( 'Save Changes', 'consentforge' ),
+                'saving'        => \__( 'Saving…', 'consentforge' ),
+                'saved'         => \__( 'Saved!', 'consentforge' ),
+                'error'         => \__( 'An error occurred.', 'consentforge' ),
+                'confirmDelete' => \__( 'Are you sure? This cannot be undone.', 'consentforge' ),
             ],
         ] );
     }

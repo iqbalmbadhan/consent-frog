@@ -35,7 +35,7 @@ class ReceiptGenerator {
 			'receipt_id'      => $receipt_id,
 			'version'         => '1.0',
 			'jurisdiction'    => 'EU-GDPR-DigitalOmnibus',
-			'timestamp'       => gmdate( 'c' ),
+			'timestamp'       => \gmdate( 'c' ),
 			'controller'      => $controller,
 			'consent_details' => [
 				'categories' => [
@@ -59,14 +59,14 @@ class ReceiptGenerator {
 						'model'   => 'opt_in',
 					],
 				],
-				'source'       => sanitize_text_field( $source ),
+				'source'       => \sanitize_text_field( $source ),
 				'gpc_detected' => (bool) ( $consent_state['gpc'] ?? false ),
 			],
 			'previous_hash'   => $previous_hash,
 			'chain_position'  => $chain_position,
 		];
 
-		$receipt_hash                 = hash( 'sha256', wp_json_encode( $receipt_data ) . $previous_hash );
+		$receipt_hash                 = hash( 'sha256', \wp_json_encode( $receipt_data ) . $previous_hash );
 		$receipt_data['receipt_hash'] = $receipt_hash;
 
 		$result = $wpdb->insert(
@@ -74,11 +74,11 @@ class ReceiptGenerator {
 			[
 				'receipt_id'     => $receipt_id,
 				'consent_log_id' => $consent_log_id,
-				'receipt_json'   => wp_json_encode( $receipt_data ),
+				'receipt_json'   => \wp_json_encode( $receipt_data ),
 				'receipt_hash'   => $receipt_hash,
 				'previous_hash'  => $previous_hash,
 				'chain_position' => $chain_position,
-				'created_at'     => current_time( 'mysql', true ),
+				'created_at'     => \current_time( 'mysql', true ),
 			],
 			[ '%s', '%d', '%s', '%s', '%s', '%d', '%s' ]
 		);
@@ -145,7 +145,7 @@ class ReceiptGenerator {
 			$data_without_hash = $data;
 			unset( $data_without_hash['receipt_hash'] );
 
-			$recomputed = hash( 'sha256', wp_json_encode( $data_without_hash ) . $previous_hash );
+			$recomputed = hash( 'sha256', \wp_json_encode( $data_without_hash ) . $previous_hash );
 
 			if ( ! hash_equals( $row['receipt_hash'], $recomputed ) ) {
 				return false;
@@ -161,9 +161,9 @@ class ReceiptGenerator {
 		$settings = SettingsManager::instance();
 
 		return [
-			'name'    => sanitize_text_field( $settings->get( 'controller_name', '', 'general' ) ),
-			'contact' => sanitize_email( $settings->get( 'controller_contact', '', 'general' ) ),
-			'address' => sanitize_textarea_field( $settings->get( 'controller_address', '', 'general' ) ),
+			'name'    => \sanitize_text_field( $settings->get( 'controller_name', '', 'general' ) ),
+			'contact' => \sanitize_email( $settings->get( 'controller_contact', '', 'general' ) ),
+			'address' => \sanitize_textarea_field( $settings->get( 'controller_address', '', 'general' ) ),
 		];
 	}
 

@@ -47,7 +47,7 @@ class ConsentEngine {
 			'marketing'   => (bool) ( $c['m'] ?? false ),
 			'gpc'         => (bool) ( $decoded['g'] ?? false ),
 			'timestamp'   => (int) ( $decoded['t'] ?? 0 ),
-			'consent_id'  => sanitize_text_field( $decoded['id'] ?? '' ),
+			'consent_id'  => \sanitize_text_field( $decoded['id'] ?? '' ),
 			'is_set'      => true,
 		];
 
@@ -100,7 +100,7 @@ class ConsentEngine {
 			'is_set'      => true,
 		];
 
-		do_action( 'consentforge/consent_updated', $this->current_state, $source, $consent_id );
+		\do_action( 'consentforge/consent_updated', $this->current_state, $source, $consent_id );
 
 		return $consent_id;
 	}
@@ -152,7 +152,7 @@ class ConsentEngine {
 			'is_set'      => true,
 		];
 
-		do_action( 'consentforge/consent_updated', $this->current_state, 'withdraw', $consent_id );
+		\do_action( 'consentforge/consent_updated', $this->current_state, 'withdraw', $consent_id );
 	}
 
 	private function compute_status( array $categories ): string {
@@ -189,7 +189,7 @@ class ConsentEngine {
 	}
 
 	private function encode_cookie( array $state ): string {
-		return base64_encode( wp_json_encode( $state ) );
+		return base64_encode( \wp_json_encode( $state ) );
 	}
 
 	private function decode_cookie( string $value ): ?array {
@@ -218,7 +218,7 @@ class ConsentEngine {
 
 	private function set_cookie( string $value ): void {
 		$settings = SettingsManager::instance();
-		$lifetime = absint( $settings->get( 'cookie_lifetime_days', 365, 'general' ) );
+		$lifetime = \absint( $settings->get( 'cookie_lifetime_days', 365, 'general' ) );
 		$expires  = time() + ( $lifetime * DAY_IN_SECONDS );
 
 		setcookie(
@@ -228,7 +228,7 @@ class ConsentEngine {
 				'expires'  => $expires,
 				'path'     => '/',
 				'domain'   => '',
-				'secure'   => is_ssl(),
+				'secure'   => \is_ssl(),
 				'httponly' => false,
 				'samesite' => 'Lax',
 			]

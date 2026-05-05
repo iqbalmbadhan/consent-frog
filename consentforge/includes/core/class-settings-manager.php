@@ -38,7 +38,7 @@ class SettingsManager {
 		foreach ( $rows as $row ) {
 			$group = $row['setting_group'];
 			$key   = $row['setting_key'];
-			$value = maybe_unserialize( $row['setting_value'] );
+			$value = \maybe_unserialize( $row['setting_value'] );
 
 			$this->cache[ $group ][ $key ] = $value;
 		}
@@ -64,7 +64,7 @@ class SettingsManager {
 			return $default;
 		}
 
-		$value                         = maybe_unserialize( $row['setting_value'] );
+		$value                         = \maybe_unserialize( $row['setting_value'] );
 		$this->cache[ $group ][ $key ] = $value;
 
 		return $value;
@@ -73,7 +73,7 @@ class SettingsManager {
 	public function set( string $key, mixed $value, string $group = 'general', bool $autoload = true ): bool {
 		global $wpdb;
 
-		$serialized   = maybe_serialize( $value );
+		$serialized   = \maybe_serialize( $value );
 		$autoload_int = $autoload ? 1 : 0;
 
 		$existing = $wpdb->get_var(
@@ -90,7 +90,7 @@ class SettingsManager {
 				[
 					'setting_value' => $serialized,
 					'autoload'      => $autoload_int,
-					'updated_at'    => current_time( 'mysql', true ),
+					'updated_at'    => \current_time( 'mysql', true ),
 				],
 				[
 					'setting_key'   => $key,
@@ -107,8 +107,8 @@ class SettingsManager {
 					'setting_group' => $group,
 					'setting_value' => $serialized,
 					'autoload'      => $autoload_int,
-					'created_at'    => current_time( 'mysql', true ),
-					'updated_at'    => current_time( 'mysql', true ),
+					'created_at'    => \current_time( 'mysql', true ),
+					'updated_at'    => \current_time( 'mysql', true ),
 				],
 				[ '%s', '%s', '%s', '%d', '%s', '%s' ]
 			);
@@ -141,10 +141,15 @@ class SettingsManager {
 
 		foreach ( $rows as $row ) {
 			$key   = $row['setting_key'];
-			$value = maybe_unserialize( $row['setting_value'] );
+			$value = \maybe_unserialize( $row['setting_value'] );
 
 			$this->cache[ $group ][ $key ] = $value;
 			$settings[ $key ]              = $value;
+		}
+
+		// Merge any in-memory cache values (e.g. set() calls within the same request)
+		if ( isset( $this->cache[ $group ] ) ) {
+			$settings = array_merge( $this->cache[ $group ], $settings );
 		}
 
 		return $settings;

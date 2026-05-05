@@ -30,14 +30,14 @@ class AdminAjax {
             'cf_run_migration',
         ];
         foreach ( $actions as $action ) {
-            add_action( 'wp_ajax_' . $action, [ $this, 'handle_' . $action ] );
+            \add_action( 'wp_ajax_' . $action, [ $this, 'handle_' . $action ] );
         }
     }
 
     private function verify(): void {
         check_ajax_referer( 'cf_admin_nonce', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( [ 'message' => __( 'Insufficient permissions.', 'consentforge' ) ], 403 );
+        if ( ! \current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => \__( 'Insufficient permissions.', 'consentforge' ) ], 403 );
         }
     }
 
@@ -50,23 +50,23 @@ class AdminAjax {
 
     public function handle_cf_dismiss_notice(): void {
         check_ajax_referer( 'cf_admin_nonce', 'nonce' );
-        if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( -1 );
+        if ( ! \current_user_can( 'manage_options' ) ) {
+            \wp_die( -1 );
         }
-        $notice_id = sanitize_key( $_POST['notice_id'] ?? '' );
+        $notice_id = \sanitize_key( $_POST['notice_id'] ?? '' );
         if ( $notice_id ) {
-            update_user_meta( get_current_user_id(), 'cf_dismissed_' . $notice_id, '1' );
+            update_user_meta( \get_current_user_id(), 'cf_dismissed_' . $notice_id, '1' );
         }
         wp_send_json_success();
     }
 
     public function handle_cf_update_cookie(): void {
         $this->verify();
-        $id   = absint( $_POST['id'] ?? 0 );
+        $id   = \absint( $_POST['id'] ?? 0 );
         $data = [
-            'category' => sanitize_text_field( $_POST['category'] ?? '' ),
-            'provider' => sanitize_text_field( $_POST['provider'] ?? '' ),
-            'purpose'  => sanitize_textarea_field( $_POST['purpose'] ?? '' ),
+            'category' => \sanitize_text_field( $_POST['category'] ?? '' ),
+            'provider' => \sanitize_text_field( $_POST['provider'] ?? '' ),
+            'purpose'  => \sanitize_textarea_field( $_POST['purpose'] ?? '' ),
         ];
         $result = CookieRegistry::instance()->update( $id, $data );
         $result ? wp_send_json_success() : wp_send_json_error( [ 'message' => 'Update failed.' ] );
@@ -74,7 +74,7 @@ class AdminAjax {
 
     public function handle_cf_delete_cookie(): void {
         $this->verify();
-        $id     = absint( $_POST['id'] ?? 0 );
+        $id     = \absint( $_POST['id'] ?? 0 );
         $result = CookieRegistry::instance()->delete( $id );
         $result ? wp_send_json_success() : wp_send_json_error( [ 'message' => 'Delete failed.' ] );
     }
@@ -83,7 +83,7 @@ class AdminAjax {
         $this->verify();
         $logs = ConsentLogger::instance()->get_logs( [ 'per_page' => 10000, 'page' => 1 ] );
         header( 'Content-Type: text/csv; charset=utf-8' );
-        header( 'Content-Disposition: attachment; filename="consent-logs-' . gmdate( 'Y-m-d' ) . '.csv"' );
+        header( 'Content-Disposition: attachment; filename="consent-logs-' . \gmdate( 'Y-m-d' ) . '.csv"' );
 
         $out = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
         fputcsv( $out, [ 'ID', 'Consent ID', 'Type', 'Visitor Hash', 'Categories Accepted', 'GPC', 'Country', 'Date' ] );
@@ -105,7 +105,7 @@ class AdminAjax {
 
     public function handle_cf_process_dsar(): void {
         $this->verify();
-        $id = absint( $_POST['request_id'] ?? 0 );
+        $id = \absint( $_POST['request_id'] ?? 0 );
         \ConsentForge\Compliance\DsarHandler::instance()->process_request( $id );
         wp_send_json_success();
     }
@@ -118,9 +118,9 @@ class AdminAjax {
 
     public function handle_cf_run_migration(): void {
         $this->verify();
-        $plugin = sanitize_key( $_POST['plugin'] ?? '' );
+        $plugin = \sanitize_key( $_POST['plugin'] ?? '' );
         $result = MigrationManager::instance()->migrate_from( $plugin );
-        if ( is_wp_error( $result ) ) {
+        if ( \is_wp_error( $result ) ) {
             wp_send_json_error( [ 'message' => $result->get_error_message() ] );
         } else {
             wp_send_json_success( $result );
