@@ -1,0 +1,101 @@
+{
+  "en": {
+    "title": "We value your privacy",
+    "description": "We use cookies to improve your experience. Under the Digital Omnibus framework, analytics cookies are opt-out and marketing cookies require your consent.",
+    "accept_all": "Accept All",
+    "reject_all": "Reject All",
+    "customize": "Customize",
+    "save_preferences": "Save Preferences",
+    "privacy_policy": "Privacy Policy",
+    "essential_label": "Essential",
+    "essential_desc": "Required for the website to function. Cannot be disabled.",
+    "analytics_label": "Analytics",
+    "analytics_desc": "Help us understand how visitors interact with our site. Opt-out available.",
+    "performance_label": "Performance",
+    "performance_desc": "Improve site speed and user experience. Opt-out available.",
+    "marketing_label": "Marketing",
+    "marketing_desc": "Used to deliver personalised ads. Requires your consent.",
+    "gpc_notice": "Your browser sent a Global Privacy Control (GPC) signal. We have automatically applied opt-out settings."
+  },
+  "de": {
+    "title": "Wir schätzen Ihre Privatsphäre",
+    "description": "Wir verwenden Cookies, um Ihre Erfahrung zu verbessern.",
+    "accept_all": "Alle akzeptieren",
+    "reject_all": "Alle ablehnen",
+    "customize": "Anpassen",
+    "save_preferences": "Einstellungen speichern",
+    "privacy_policy": "Datenschutzerklärung"
+  },
+  "fr": {
+    "title": "Nous respectons votre vie privée",
+    "description": "Nous utilisons des cookies pour améliorer votre expérience.",
+    "accept_all": "Tout accepter",
+    "reject_all": "Tout refuser",
+    "customize": "Personnaliser",
+    "save_preferences": "Enregistrer les préférences",
+    "privacy_policy": "Politique de confidentialité"
+  },
+  "es": {
+    "title": "Valoramos su privacidad",
+    "description": "Usamos cookies para mejorar su experiencia.",
+    "accept_all": "Aceptar todo",
+    "reject_all": "Rechazar todo",
+    "customize": "Personalizar",
+    "save_preferences": "Guardar preferencias",
+    "privacy_policy": "Política de privacidad"
+  },
+  "it": {
+    "title": "Rispettiamo la tua privacy",
+    "description": "Utilizziamo i cookie per migliorare la tua esperienza.",
+    "accept_all": "Accetta tutto",
+    "reject_all": "Rifiuta tutto",
+    "customize": "Personalizza",
+    "save_preferences": "Salva preferenze",
+    "privacy_policy": "Informativa sulla privacy"
+  },
+  "nl": {
+    "title": "Wij respecteren uw privacy",
+    "description": "We gebruiken cookies om uw ervaring te verbeteren.",
+    "accept_all": "Alles accepteren",
+    "reject_all": "Alles weigeren",
+    "customize": "Aanpassen",
+    "save_preferences": "Voorkeuren opslaan",
+    "privacy_policy": "Privacybeleid"
+  },
+  "pl": {
+    "title": "Cenimy Twoją prywatność",
+    "description": "Używamy plików cookie, aby poprawić Twoje doświadczenie.",
+    "accept_all": "Zaakceptuj wszystkie",
+    "reject_all": "Odrzuć wszystkie",
+    "customize": "Dostosuj",
+    "save_preferences": "Zapisz preferencje",
+    "privacy_policy": "Polityka prywatności"
+  },
+  "pt": {
+    "title": "Valorizamos a sua privacidade",
+    "description": "Utilizamos cookies para melhorar a sua experiência.",
+    "accept_all": "Aceitar tudo",
+    "reject_all": "Rejeitar tudo",
+    "customize": "Personalizar",
+    "save_preferences": "Guardar preferências",
+    "privacy_policy": "Política de privacidade"
+  },
+  "sv": {
+    "title": "Vi värnar om din integritet",
+    "description": "Vi använder cookies för att förbättra din upplevelse.",
+    "accept_all": "Acceptera alla",
+    "reject_all": "Avvisa alla",
+    "customize": "Anpassa",
+    "save_preferences": "Spara inställningar",
+    "privacy_policy": "Integritetspolicy"
+  },
+  "da": {
+    "title": "Vi respekterer dit privatliv",
+    "description": "Vi bruger cookies til at forbedre din oplevelse.",
+    "accept_all": "Acceptér alle",
+    "reject_all": "Afvis alle",
+    "customize": "Tilpas",
+    "save_preferences": "Gem præferencer",
+    "privacy_policy": "Privatlivspolitik"
+  }
+}
