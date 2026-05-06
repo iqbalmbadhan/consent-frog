@@ -1,6 +1,8 @@
 <?php
 namespace ConsentForge\Admin;
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 use ConsentForge\Core\SettingsManager;
 use ConsentForge\Licensing\FeatureGate;
 use ConsentForge\Licensing\LicenseManager;

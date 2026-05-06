@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ConsentForge\Core;
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 class ReceiptGenerator {
 
 	private static ?self $instance = null;

@@ -1,6 +1,8 @@
 <?php
 namespace ConsentForge\Migration;
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 use ConsentForge\Core\CookieRegistry;
 
 class WpConsentImport {

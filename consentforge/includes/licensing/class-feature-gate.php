@@ -1,6 +1,8 @@
 <?php
 namespace ConsentForge\Licensing;
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 class FeatureGate {
 
     private static array $gates = [

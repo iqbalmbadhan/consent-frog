@@ -1,6 +1,8 @@
 <?php
 namespace ConsentForge\Licensing;
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 class LicenseManager {
 
     private static ?self $instance = null;

@@ -1,6 +1,8 @@
 <?php
 namespace ConsentForge\Scanner;
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 class ScanScheduler {
 
     private static ?self $instance = null;

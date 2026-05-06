@@ -1,6 +1,8 @@
 <?php
 namespace ConsentForge\Scanner;
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 use ConsentForge\Core\CookieRegistry;
 
 class CookieScanner {

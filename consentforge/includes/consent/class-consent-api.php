@@ -1,6 +1,8 @@
 <?php
 namespace ConsentForge\Consent;
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 use ConsentForge\Core\ConsentEngine;
 use ConsentForge\Core\ConsentLogger;
 use ConsentForge\Core\ReceiptGenerator;

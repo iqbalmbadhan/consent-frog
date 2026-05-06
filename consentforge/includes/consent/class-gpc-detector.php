@@ -1,6 +1,8 @@
 <?php
 namespace ConsentForge\Consent;
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 class GpcDetector {
 
     private static ?self $instance = null;

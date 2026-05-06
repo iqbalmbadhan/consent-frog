@@ -1,6 +1,8 @@
 <?php
 namespace ConsentForge\Admin;
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 use ConsentForge\Core\CookieRegistry;
 use ConsentForge\Core\ConsentLogger;
 use ConsentForge\Core\ReceiptGenerator;

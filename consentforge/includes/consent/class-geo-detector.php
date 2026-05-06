@@ -1,6 +1,8 @@
 <?php
 namespace ConsentForge\Consent;
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 class GeoDetector {
 
     private static ?self $instance = null;

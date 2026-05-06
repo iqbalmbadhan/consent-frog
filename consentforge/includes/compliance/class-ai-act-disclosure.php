@@ -1,6 +1,8 @@
 <?php
 namespace ConsentForge\Compliance;
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 class AiActDisclosure {
 
     private static ?self $instance = null;
