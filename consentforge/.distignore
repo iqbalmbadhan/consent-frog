@@ -1,0 +1,21 @@
+# Files/directories excluded from the release zip and SVN deploy
+.distignore
+.gitignore
+.git
+.github
+admin-ui/src
+admin-ui/node_modules
+admin-ui/.babelrc
+admin-ui/webpack.config.js
+tests
+phpunit.xml
+phpunit.xml.dist
+composer.json
+composer.lock
+package.json
+package-lock.json
+yarn.lock
+*.map
+*.log
+.DS_Store
+Thumbs.db

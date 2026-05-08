@@ -1,0 +1,45 @@
+name: Deploy to WordPress.org
+
+on:
+  push:
+    tags:
+      - 'v*'   # triggers on v1.0.0, v1.1.0, etc.
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: consentforge/package.json
+
+      - name: Build admin UI
+        working-directory: consentforge
+        run: |
+          npm ci
+          npm run build
+
+      - name: Generate POT file
+        run: |
+          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          chmod +x wp-cli.phar
+          php wp-cli.phar i18n make-pot consentforge consentforge/languages/consentforge.pot \
+            --domain=consentforge \
+            --exclude="admin-ui/src,admin-ui/node_modules,tests"
+
+      - name: Deploy to WordPress.org SVN
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SLUG: consentforge
+          BUILD_DIR: consentforge
+          ASSETS_DIR: .wordpress-org
